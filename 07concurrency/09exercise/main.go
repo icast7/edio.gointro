@@ -17,12 +17,16 @@ func walk(t *tree.Tree, ch chan int) {
 // at each recursion
 func recursiveWalk(t *tree.Tree, ch chan int) {
 	if t != nil {
+		// send left part of tree to be iterated over first
 		recursiveWalk(t.Left, ch)
+		// push value to channel
 		ch <- t.Value
+		// send right part of tree to be iterated over last
 		recursiveWalk(t.Right, ch)
 	}
 }
 
+// Same determines whether the trees t1 and t2 contain the same values.
 func same(t1, t2 *tree.Tree) bool {
 	ch1 := make(chan int)
 	ch2 := make(chan int)
@@ -49,14 +53,10 @@ func same(t1, t2 *tree.Tree) bool {
 
 func main() {
 	ch := make(chan int)
-	fmt.Println("- - - - - - - - - - - - - - ")
-	go walk(tree.New(3), ch)
+	go walk(tree.New(1), ch)
 	for v := range ch {
-		fmt.Printf("%d ", v)
+		fmt.Printf("%d \n", v)
 	}
-	fmt.Print("\n")
-	fmt.Println("- - - - - - - - - - - - - - ")
 	fmt.Println(same(tree.New(1), tree.New(1)))
-	fmt.Println("- - - - - - - - - - - - - - ")
 	fmt.Println(same(tree.New(1), tree.New(2)))
 }
